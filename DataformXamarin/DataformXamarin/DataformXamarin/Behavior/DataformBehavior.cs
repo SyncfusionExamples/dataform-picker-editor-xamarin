@@ -21,8 +21,11 @@ namespace DataformXamarin
             dataForm.SourceProvider = new SourceProviderExt();
             dataForm.RegisterEditor("City", "Picker");
             dataForm.DataObject = new ContactInfo();
-            dataForm.AutoGeneratingDataFormItem += DataForm_AutoGeneratingDataFormItem;
-
+            this.WireEvents();
+        }
+        private void WireEvents()
+        {
+            this.dataForm.AutoGeneratingDataFormItem += DataForm_AutoGeneratingDataFormItem;
         }
         private void DataForm_AutoGeneratingDataFormItem(object sender, AutoGeneratingDataFormItemEventArgs e)
         {
@@ -34,6 +37,15 @@ namespace DataformXamarin
                     (e.DataFormItem as DataFormPickerItem).ValueMemberPath = "PostalCode";
                 }
             }
+        }
+        protected override void OnDetachingFrom(ContentPage bindable)
+        {
+            base.OnDetachingFrom(bindable);
+            this.UnWireEvents();
+        }
+        private void UnWireEvents()
+        {
+            this.dataForm.AutoGeneratingDataFormItem -= DataForm_AutoGeneratingDataFormItem;
         }
     }
     public class SourceProviderExt : SourceProvider
@@ -53,5 +65,6 @@ namespace DataformXamarin
         }
     }
 }
+
 
     
